@@ -149,6 +149,9 @@ function App() {
             onCardLike={handleCardLike}
             onCardDelete={handleTrash}
           />
+        <Route path='/signin'>
+          <Login />
+        </Route>
       </Switch>
         <Footer />
         <EditAvatarPopup isOpen={isEditAvatarOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
