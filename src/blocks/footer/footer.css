@@ -1,0 +1,11 @@
+@import url(__copyright/footer__copyright.css);
+
+.footer {
+  margin: 68px 15.625% 60px;
+}
+
+@media screen and (max-width: 1023px) {
+  .footer {
+    margin: 50px 5.9375% 36px;
+  }
+}
