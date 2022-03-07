@@ -125,6 +125,6 @@ class Api {
 
 }
 
-const api = new Api({baseUrl: 'https://around.nomoreparties.co/v1', groupID: 'group-11', authToken: 'dd03cd11-47a0-450d-9165-34e32dd702c6'})
+const api = new Api({baseUrl: 'https://around.nomoreparties.co', groupID: 'group-11', authToken: 'dd03cd11-47a0-450d-9165-34e32dd702c6'})
 
 export default api

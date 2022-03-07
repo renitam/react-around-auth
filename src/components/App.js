@@ -1,7 +1,12 @@
 import React from 'react'
+import { Route, Switch } from 'react-router-dom'
 import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
+import Login from './Login'
+import Register from './Register'
+import InfoTooltip from './InfoTooltip'
+import ProtectedRoute from './ProtectedRoute'
 import EditProfilePopup from './EditProfilePopup'
 import ImagePopup from './ImagePopup'
 import api from '../utils/api'
@@ -19,8 +24,9 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({})
   const [currentUser, setCurrentUser] = React.useState({})
   const [cardList, setCardList] = React.useState([])
+  const [loggedIn, setLoggedIn] = React.useState(false)
 
-  // Load in profile info and initial cards.
+  // Load in profile info
   React.useEffect(() => {
     api.getProfileInfo()
       .then((info) => {
@@ -29,6 +35,7 @@ function App() {
       .catch(err => console.error(`Unable to load profile info: ${err}`))
   }, [])
 
+  // Load in initial cardsnpm 
   React.useEffect(() => {
     api.getCards()
     .then( (initialCards) => {
@@ -37,15 +44,17 @@ function App() {
     .catch(err => console.error(`Unable to load cards: ${err}`))
   }, [])
 
-  // Define edit profile/avatar modals and api calls
+  // Open edit avatar modal
   function handleEditAvatarClick() {
     setIsEditAvatarOpen(true)
   }
 
+  // Open edit profile modal
   function handleEditProfileClick() {
     setIsEditProfileOpen(true)
   }
 
+  // Send new profile info from modal to server (name, about) then close modal
   function handleUpdateUser(userInfo) {
     api.saveProfile(userInfo)
       .then(data => {
@@ -55,6 +64,7 @@ function App() {
       .catch(err => console.error(`Unable to save profile: ${err}`))
   }
 
+  // Send new avatar to server then close modal
   function handleUpdateAvatar({ avatar }) {
     api.saveAvatar(avatar)
       .then(data => {
@@ -64,17 +74,18 @@ function App() {
       .catch(err => console.error(`Unable to save avatar: ${err}`))
   }
 
-  // Define card preview functions
+  // Open preview modal for selected card
   function handleCardClick(card) {
     setSelectedCard(card)
     setIsPreviewOpen(true)
   }
 
-  // Define add place modal functions
+  // Open new card modal
   function handleAddPlaceClick() {
     setIsAddPlaceOpen(true)
   }
 
+  // Send new card data to server, add to card list, then close modal
   function handleAddPlaceSubmit({ name, link }) {
     api.addCard({ name, link })
       .then(newCard => {
@@ -84,6 +95,7 @@ function App() {
       .catch(err => console.error(`Unable to add card: ${err}. Check link and try again.`))
   }
 
+  // Send a card like to server, then replace with modified card in card list
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id)
 
@@ -94,6 +106,7 @@ function App() {
       .catch(err => console.error(`Unable to update like status: ${err}`))
   }
 
+  // Delete a card from server, then remove from card list and close trash modal
   function handleCardDelete() {
     api.trashCard(selectedCard._id)
       .then(() => setCardList( cardList.filter(cards => cards._id !== selectedCard._id) ))
@@ -102,6 +115,7 @@ function App() {
       .catch(err => console.error(`Unable to delete card: ${err}`))
   }
 
+  // Open trash modal for selected card
   function handleTrash(card) {
     setSelectedCard(card)
     setIsConfirmTrashOpen(true)
@@ -117,19 +131,25 @@ function App() {
     setSelectedCard({})
   }
 
+  // HTML for landing page
   return (
     <div className='page'>
       <Header />
       <CurrentUserContext.Provider value={currentUser}>
-        <Main 
-          onEditProfileClick={handleEditProfileClick}
-          onAddPlaceClick={handleAddPlaceClick} 
-          onEditAvatarClick={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-          cards={cardList}
-          onCardLike={handleCardLike}
-          onCardDelete={handleTrash}
-        />
+      <Switch>
+        <ProtectedRoute 
+            path='/'
+            component={Main} 
+            loggedIn={loggedIn}
+            onEditProfileClick={handleEditProfileClick}
+            onAddPlaceClick={handleAddPlaceClick} 
+            onEditAvatarClick={handleEditAvatarClick}
+            onCardClick={handleCardClick}
+            cards={cardList}
+            onCardLike={handleCardLike}
+            onCardDelete={handleTrash}
+          />
+      </Switch>
         <Footer />
         <EditAvatarPopup isOpen={isEditAvatarOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
         <EditProfilePopup isOpen={isEditProfileOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
