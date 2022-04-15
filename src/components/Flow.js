@@ -1,12 +1,12 @@
-import React from 'react';
-import * as auth from '../utils/auth';
+import React from 'react'
+import * as auth from '../utils/auth'
 
 const Flow = (props) => {
-  const { title, onSubmit, initialEmail } = props;
-  const [email, setEmail] = React.useState(initialEmail);
-  const [password, setPassword] = React.useState('');
-  const [hide, setHide] = React.useState(true);
-  const [icon, setIcon] = React.useState('fa-solid fa-eye');
+  const { title, onSubmit, initialEmail } = props
+  const [email, setEmail] = React.useState(initialEmail)
+  const [password, setPassword] = React.useState('')
+  const [hide, setHide] = React.useState(true)
+  const [icon, setIcon] = React.useState('fa-solid fa-eye')
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -15,17 +15,17 @@ const Flow = (props) => {
 
   function handleSubmit(e) {
     // Prevent the browser from navigating to the form address
-    e.preventDefault();
+    e.preventDefault()
     // Pass the values of the managed components to the external handler
-    onSubmit(email, password);
+    onSubmit(email, password)
   } 
 
   function handleEye() {
-    setHide(!hide);
+    setHide(!hide)
     if (icon === 'fa-solid fa-eye') {
-      setIcon('fa-solid fa-eye-slash');
+      setIcon('fa-solid fa-eye-slash')
     } else {
-      setIcon('fa-solid fa-eye');
+      setIcon('fa-solid fa-eye')
     }
   }
 

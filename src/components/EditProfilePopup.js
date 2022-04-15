@@ -19,13 +19,13 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
 
   function handleSubmit(e) {
     // Prevent the browser from navigating to the form address
-    e.preventDefault();
+    e.preventDefault()
   
     // Pass the values of the managed components to the external handler
     onUpdateUser({
       name,
       about: description,
-    });
+    })
   } 
 
   return(

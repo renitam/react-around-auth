@@ -32,7 +32,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [toolTipStatus, setToolTipStatus] = React.useState(registrationStatuses[0])
-  const history = useHistory();
+  const history = useHistory()
   
 
   // Load in profile info -- currentUser state used for CurrentUserContext
@@ -55,7 +55,7 @@ function App() {
 
   // Check token upon loading page
   React.useEffect(() => {
-    handleToken();
+    handleToken()
   }, [])
 
   // Handle login submit 
@@ -64,7 +64,7 @@ function App() {
       .then(res => {
         setIsLoggedIn(true)
         if (!localStorage.getItem('_id')) {
-          handleToken();
+          handleToken()
         }
       })
       .then(res => history.push('/'))

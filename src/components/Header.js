@@ -4,16 +4,16 @@ import { Route, Link } from 'react-router-dom'
 
 function Header(props) {
   const { onSignOut, email, isLoggedIn } = props
-  const [showHeader, setShowHeader] = React.useState(false);
+  const [showHeader, setShowHeader] = React.useState(false)
 
 
   const toggleMenu = () => {
-    setShowHeader(!showHeader);
+    setShowHeader(!showHeader)
   }
 
   const signOut = () => {
-    toggleMenu();
-    onSignOut();
+    toggleMenu()
+    onSignOut()
   }
 
   return (
