@@ -115,6 +115,7 @@ class Api {
       .then(res => this._checkServerCode(res))
   }
 
+  // Check user's card like status and toggle
   changeLikeCardStatus(cardId, isNotLiked) {
     if (isNotLiked) {
       return this.addLike(cardId)
@@ -122,7 +123,6 @@ class Api {
       return this.removeLike(cardId)
     }
   }
-
 }
 
 const api = new Api({baseUrl: 'https://around.nomoreparties.co', groupID: 'group-11', authToken: 'dd03cd11-47a0-450d-9165-34e32dd702c6'})

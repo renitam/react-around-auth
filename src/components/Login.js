@@ -1,28 +1,10 @@
 import React from 'react'
-import { CurrentUserContext } from '../contexts/CurrentUserContext'
+import Flow from './Flow'
 
-function Login({ title, onSubmit, buttonText, redirectText }) {
-
-  const currentUser = React.useContext(CurrentUserContext) || ''
-  const [email, setEmail] = React.useState('')
-  const [password, setPassword] = React.useState('')
-
-  React.useEffect( () => {
-    setUserName(currentUser.name || '')
-    setUserAbout(currentUser.about || '')
-    setUserAvatar(currentUser.avatar || '')
-  }, [currentUser])
+function Login({ onLogin, email }) {
 
   return(
-    <main>
-      <section className='login'>
-        <form className={`login__form`} email={email} password={password} onSubmit={onSubmit}>
-            <h2 className='login__title'>{title}</h2>
-            <button type='submit' className='modal__save'>{buttonText}</button>
-            <p>{redirectText}</p>
-          </form>
-      </section>
-    </main>
+    <Flow title='Log in' onSubmit={onLogin} initialEmail={email} />
   )
 }
 

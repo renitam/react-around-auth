@@ -2,7 +2,7 @@
   margin: 16px 0 0;
   width: 415px;
   font-size: 18px;
-  line-height: 1;
+  line-height: 22px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -14,6 +14,7 @@
     margin: 14px auto 0;
     width: 282px;
     font-size: 14px;
+    line-height: 18px;
     text-align: center;
   }
 }

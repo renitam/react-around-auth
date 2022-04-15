@@ -5,6 +5,7 @@
   grid-template-columns: repeat(3, minmax(100px, 282px));
   gap: 17px 20px;
   justify-content: center;
+  padding-bottom: 150px;
 }
 
 @media screen and (max-width: 1272px) {
@@ -26,5 +27,6 @@
   .cards {
     margin: 36px 5.9375% 0;
     grid-template-columns: minmax(min-content, 282px);
+    padding-bottom: 75px;
   }
 }

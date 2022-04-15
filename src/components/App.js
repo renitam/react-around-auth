@@ -1,5 +1,6 @@
 import React from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { CurrentUserContext } from '../contexts/CurrentUserContext'
+import { Route, Switch, useHistory } from 'react-router-dom'
 import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
@@ -10,10 +11,11 @@ import ProtectedRoute from './ProtectedRoute'
 import EditProfilePopup from './EditProfilePopup'
 import ImagePopup from './ImagePopup'
 import api from '../utils/api'
-import { CurrentUserContext } from '../contexts/CurrentUserContext'
 import EditAvatarPopup from './EditAvatarPopup'
 import AddPlacePopup from './AddPlacePopup'
 import TrashPopup from './TrashPopup'
+import { registrationStatuses } from '../utils/constants'
+import * as auth from '../utils/auth'
 
 function App() {
   const [isEditAvatarOpen, setIsEditAvatarOpen] = React.useState(false)
@@ -21,12 +23,19 @@ function App() {
   const [isAddPlaceOpen, setIsAddPlaceOpen] = React.useState(false)
   const [isConfirmTrashOpen, setIsConfirmTrashOpen] = React.useState(false)
   const [isPreviewOpen, setIsPreviewOpen] = React.useState(false)
+  const [isInfoToolTipOpen, setIsInfoToolTipOpen] = React.useState(false)
+
+  const [infoStatus, setInfoStatus] = React.useState({})
   const [selectedCard, setSelectedCard] = React.useState({})
   const [currentUser, setCurrentUser] = React.useState({})
   const [cardList, setCardList] = React.useState([])
-  const [loggedIn, setLoggedIn] = React.useState(false)
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false)
+  const [email, setEmail] = React.useState('')
+  const [toolTipStatus, setToolTipStatus] = React.useState(registrationStatuses[0])
+  const history = useHistory();
+  
 
-  // Load in profile info
+  // Load in profile info -- currentUser state used for CurrentUserContext
   React.useEffect(() => {
     api.getProfileInfo()
       .then((info) => {
@@ -35,7 +44,7 @@ function App() {
       .catch(err => console.error(`Unable to load profile info: ${err}`))
   }, [])
 
-  // Load in initial cardsnpm 
+  // Load in initial cards
   React.useEffect(() => {
     api.getCards()
     .then( (initialCards) => {
@@ -43,6 +52,40 @@ function App() {
     })
     .catch(err => console.error(`Unable to load cards: ${err}`))
   }, [])
+
+  // Handle login submit 
+  function onLogin(email, password) {
+    console.log(email, password)
+    auth.login(email, password)
+      .then(res => setIsLoggedIn(true))
+      .then(res => history.push('/'))
+      .catch(err => console.error(`An error occurred during login: ${err}`))
+  }
+
+  // Handle register submit
+  function onRegister(email, password) {
+    console.log(isLoggedIn)
+    auth.register(email, password)
+      .then(res => {
+        // Add new user id to currentUser context -- 
+        // Note to self: may need a default avatar and name for project 15 on backend, or more signup fields.
+        // const newUser = currentUser
+        // newUser._id = res._id
+
+        // set email then redirect to login page with email filled out.
+        setEmail(res.email)
+        // load success message to info tool tip modal and open
+        setInfoStatus(registrationStatuses[0])
+        isInfoToolTipOpen(true)
+      })
+      .then(res => history.push('/signin'))
+      .catch(err => console.error(`An error occurred during signup: ${err}`))
+  }
+
+  // Handle logout submit
+  function onSignOut() {
+    console.log(isLoggedIn)
+  }
 
   // Open edit avatar modal
   function handleEditAvatarClick() {
@@ -128,40 +171,45 @@ function App() {
     setIsAddPlaceOpen(false)
     setIsConfirmTrashOpen(false)
     setIsPreviewOpen(false)
+    setIsInfoToolTipOpen(false)
     setSelectedCard({})
+    setInfoStatus({})
   }
 
   // HTML for landing page
   return (
-    <div className='page'>
-      <Header />
+    <>
       <CurrentUserContext.Provider value={currentUser}>
-      <Switch>
-        <ProtectedRoute 
-            path='/'
-            component={Main} 
-            loggedIn={loggedIn}
-            onEditProfileClick={handleEditProfileClick}
-            onAddPlaceClick={handleAddPlaceClick} 
-            onEditAvatarClick={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            cards={cardList}
-            onCardLike={handleCardLike}
-            onCardDelete={handleTrash}
-          />
-        <Route path='/signin'>
-          <Login />
-        </Route>
-      </Switch>
+        <Header isLoggedIn={isLoggedIn} email={email} onSignOut={onSignOut} />
+        <Switch>
+          <ProtectedRoute 
+              exact path='/'
+              component={Main} 
+              isLoggedIn={isLoggedIn}
+              onEditProfileClick={handleEditProfileClick}
+              onAddPlaceClick={handleAddPlaceClick} 
+              onEditAvatarClick={handleEditAvatarClick}
+              onCardClick={handleCardClick}
+              cards={cardList}
+              onCardLike={handleCardLike}
+              onCardDelete={handleTrash}
+            />
+          <Route path='/signup'>
+            <Register onRegister={onRegister} email={email} />
+          </Route>
+          <Route path='/signin'>
+            <Login onLogin={onLogin} email={email} />
+          </Route>
+        </Switch>
         <Footer />
         <EditAvatarPopup isOpen={isEditAvatarOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
         <EditProfilePopup isOpen={isEditProfileOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
         <AddPlacePopup isOpen={isAddPlaceOpen} onClose={closeAllPopups} onUpdateCards={handleAddPlaceSubmit}/>
         <TrashPopup isOpen={isConfirmTrashOpen} onClose={closeAllPopups} onUpdateTrash={handleCardDelete} />
       </CurrentUserContext.Provider>
-
+      <InfoTooltip isOpen={isInfoToolTipOpen} onClose={closeAllPopups} status={toolTipStatus} />
       <ImagePopup isOpen={isPreviewOpen} onClose={closeAllPopups} card={selectedCard} />
-    </div>
+    </>
   )
 }
 
