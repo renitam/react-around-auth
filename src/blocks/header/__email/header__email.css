@@ -9,6 +9,9 @@
   color: #FFFFFF;
   margin: 0;
   align-self: flex-end;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  max-width: 350px;
 }
 
 @media (max-width: 767px) {

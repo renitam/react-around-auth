@@ -29,7 +29,7 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({})
   const [currentUser, setCurrentUser] = React.useState({})
   const [cardList, setCardList] = React.useState([])
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false)
+  const [isLoggedIn, setIsLoggedIn] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [toolTipStatus, setToolTipStatus] = React.useState(registrationStatuses[0])
   const history = useHistory();
@@ -53,38 +53,70 @@ function App() {
     .catch(err => console.error(`Unable to load cards: ${err}`))
   }, [])
 
+  // Check token upon loading page
+  React.useEffect(() => {
+    handleToken();
+  }, [])
+
   // Handle login submit 
   function onLogin(email, password) {
-    console.log(email, password)
     auth.login(email, password)
-      .then(res => setIsLoggedIn(true))
+      .then(res => {
+        setIsLoggedIn(true)
+        if (!localStorage.getItem('_id')) {
+          handleToken();
+        }
+      })
       .then(res => history.push('/'))
       .catch(err => console.error(`An error occurred during login: ${err}`))
   }
 
   // Handle register submit
   function onRegister(email, password) {
-    console.log(isLoggedIn)
     auth.register(email, password)
       .then(res => {
-        // Add new user id to currentUser context -- 
+        // For Project 15 -- Add new user id to currentUser context
         // Note to self: may need a default avatar and name for project 15 on backend, or more signup fields.
         // const newUser = currentUser
         // newUser._id = res._id
 
         // set email then redirect to login page with email filled out.
         setEmail(res.email)
+        setIsLoggedIn(true)
+        history.push('/')
+      })
+      .then(res => {
         // load success message to info tool tip modal and open
         setInfoStatus(registrationStatuses[0])
-        isInfoToolTipOpen(true)
+        setIsInfoToolTipOpen(true)
       })
-      .then(res => history.push('/signin'))
-      .catch(err => console.error(`An error occurred during signup: ${err}`))
+      .catch(err => {
+        console.error(`An error occurred during signup: ${err}`)
+        setInfoStatus(registrationStatuses[1])
+        setIsInfoToolTipOpen(true)
+      })
   }
 
   // Handle logout submit
   function onSignOut() {
-    console.log(isLoggedIn)
+    localStorage.removeItem('token')
+    setEmail('')
+    setIsLoggedIn(false)
+    history.push('/signin')
+  }
+
+  function handleToken(token = localStorage.getItem('token')) {
+    auth.checkToken(token)
+      .then(res => {
+        setEmail(res.data.email)
+        setIsLoggedIn(true)
+        // For Project 15, save _id to currentUser context
+        // const data = currentUser
+        // data._id = res._id
+        // setCurrentUser(data)
+        history.push('/')
+      })
+      .catch(err => `An error occurred during authentication: ${err}`)
   }
 
   // Open edit avatar modal

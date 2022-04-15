@@ -3,12 +3,14 @@ import Popup from './Popup';
 import { registrationStatuses } from '../utils/constants';
 
 const InfoTooltip = (props) => {
-  const { isOpen, status } = props
+  const { isOpen, status, onClose } = props
 
   return(
-    <Popup name='info' isOpen={isOpen}>
-      <img src={status.image} alt={status.alt} className='info__image' /> 
-      <p className='info__text'>{status.text}</p>
+    <Popup name='info' isOpen={isOpen} onClose={onClose}>
+      <div className='info'>
+        <img src={status.image} alt={status.alt} className='info__image' /> 
+        <p className='info__text'>{status.status}</p>
+      </div>
     </Popup>
         
   )

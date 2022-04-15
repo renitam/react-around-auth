@@ -2,6 +2,7 @@
 @import url(__body/_type/modal__body_type_preview.css);
 @import url(__caption/modal__caption.css);
 @import url(__close-btn/modal__close-btn.css);
+@import url(__close-btn/_type/modal__close-btn_type_info.css);
 @import url(__close-btn/_type/modal__close-btn_type_preview.css);
 @import url(__form/modal__form.css);
 @import url(__image/modal__image.css);
@@ -29,4 +30,10 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+@media (max-width: 659px) {
+  .modal {
+    justify-content: flex-start;
+  }
 }

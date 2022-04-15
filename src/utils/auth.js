@@ -1,15 +1,15 @@
 // Register user and return email and owner ID
-const baseUrl= 'https://around.nomoreparties.co' 
+const baseUrl= 'https://register.nomoreparties.co' 
 const groupID= 'group-11'
 
 function checkServerCode(res) {
   if (res.ok) {
-    console.log(res)
     return res.json()
   }
   return Promise.reject(`Error: ${res.status}`)
 }
 
+// Register user, return id & email for sign-in and loading page
 export const register = (email, password) => {
   return fetch(`${baseUrl}/signup`, {
     method: 'POST',
@@ -19,6 +19,11 @@ export const register = (email, password) => {
     body: JSON.stringify({ email, password })
   })
   .then(res => checkServerCode(res))
+  .then(res => {
+    localStorage.setItem('email', res.email)
+    localStorage.setItem('_id', res._id)
+    return res
+  })
 }
 
 // Log in with email password, return auth token
@@ -31,15 +36,20 @@ export const login = (email, password) => {
     body: JSON.stringify({ email, password })
   })
   .then(res => checkServerCode(res))
+  .then((res) => {
+    localStorage.setItem('token', res.token)
+    return res
+  })
 }
 
+// Check login token upon visiting page and return id & email for loading page
 export const checkToken = (token) => {
-  return fetch(`${baseUrl}/signin`, {
-    method: 'POST',
+  return fetch(`${baseUrl}/users/me`, {
+    method: 'GET',
     headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ token })
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
   })
   .then(res => checkServerCode(res))
 }

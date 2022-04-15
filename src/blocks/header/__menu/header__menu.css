@@ -2,6 +2,8 @@
   display: flex;
   align-self: flex-end;
   gap: 24px;
+  visibility: visible;
+  transition: linear 0.25s visibility;
 }
 
 @media (max-width: 767px) {

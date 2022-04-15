@@ -9,6 +9,10 @@ function Header(props) {
 
   const toggleMenu = () => {
     setShowHeader(!showHeader);
+  }
+
+  const signOut = () => {
+    toggleMenu();
     onSignOut();
   }
 
@@ -17,7 +21,7 @@ function Header(props) {
       {/* Mobile menu bar */}
       <div className={showHeader ? "header__mobile" : "header__mobile header__mobile_hide"}>
         <p className='header__email header__email_mobile'>{email}</p>
-        <Link className='header__action header__action_dim header__action_mobile' to='/signin' onClick={toggleMenu}>Log out</Link>
+        <Link className='header__action header__action_dim header__action_mobile' to='/signin' onClick={signOut}>Log out</Link>
       </div>
 
       <img 

@@ -4,7 +4,7 @@ function Popup ({ name, isOpen, onClose, children }) {
       <div className='modal__body'>
         <button
           type='button'
-          className='modal__close-btn link'
+          className={`modal__close-btn modal__close-btn_type_${name} link`}
           aria-label={`close ${name} menu`}
           onClick={onClose}
         ></button>
