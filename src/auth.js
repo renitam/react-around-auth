@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 export const BASE_URL = 'https://register.nomoreparties.co';
 
 export const register = (username, password, email) => {

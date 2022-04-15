@@ -23,10 +23,17 @@
   justify-content: space-between;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 1023px) {
+  .header {
+    flex-wrap: nowrap;
+    max-width: 886px;
+  }
+}
+
+@media screen and (max-width: 768px) {
   .header {
     margin: 0 auto;
     padding: 0;
-    max-width: 886px;
+    flex-wrap: wrap;
   }
 }

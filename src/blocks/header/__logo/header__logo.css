@@ -5,14 +5,14 @@
 
 @media screen and (max-width: 1023px) {
   .header__logo {
-    margin: 0 0 0 8.4375%;
     width: 126px;
     height: 24px;
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .header__logo {
+    margin: 0 0 0 8.4375%;
     padding: 28px 0 32px;
   }
 }

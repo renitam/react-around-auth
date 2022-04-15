@@ -1,10 +1,10 @@
 import React from 'react'
-import Flow from './Flow'
+import AuthForm from './AuthForm'
 
 function Login({ onLogin, email }) {
 
   return(
-    <Flow title='Log in' onSubmit={onLogin} initialEmail={email} />
+    <AuthForm title='Log in' onSubmit={onLogin} initialEmail={email} />
   )
 }
 

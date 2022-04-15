@@ -88,13 +88,12 @@ function App() {
       .then(res => {
         // load success message to info tool tip modal and open
         setInfoStatus(registrationStatuses[0])
-        setIsInfoToolTipOpen(true)
       })
       .catch(err => {
         console.error(`An error occurred during signup: ${err}`)
         setInfoStatus(registrationStatuses[1])
-        setIsInfoToolTipOpen(true)
       })
+      .finally(setIsInfoToolTipOpen(true))
   }
 
   // Handle logout submit

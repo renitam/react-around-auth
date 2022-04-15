@@ -1,10 +1,10 @@
-import Flow from "./Flow"
+import AuthForm from "./AuthForm"
 
 const Register = (props) => {
   const { onRegister, email } = props
 
   return(
-    <Flow title='Sign up' onSubmit={onRegister} initialEmail={email} />
+    <AuthForm title='Sign up' onSubmit={onRegister} initialEmail={email} />
   )
 }
 
