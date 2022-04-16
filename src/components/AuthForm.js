@@ -70,7 +70,7 @@ const Flow = (props) => {
         <i className={`${icon} auth__eye link`} onClick={handleEye} />
         <span className='auth__input-error auth__input-error_pass'></span>
         <button type='submit' className='auth__save'>{title}</button>
-        <Link className='auth__footer' to={footerPath}>{footer}</Link>
+        <Link className='auth__footer link' to={footerPath}>{footer}</Link>
       </form>
     </main>
   )
