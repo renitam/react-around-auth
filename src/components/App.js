@@ -25,13 +25,12 @@ function App() {
   const [isPreviewOpen, setIsPreviewOpen] = React.useState(false)
   const [isInfoToolTipOpen, setIsInfoToolTipOpen] = React.useState(false)
 
-  const [infoStatus, setInfoStatus] = React.useState({})
+  const [toolTipStatus, setToolTipStatus] = React.useState(registrationStatuses[0])
   const [selectedCard, setSelectedCard] = React.useState({})
   const [currentUser, setCurrentUser] = React.useState({})
   const [cardList, setCardList] = React.useState([])
   const [isLoggedIn, setIsLoggedIn] = React.useState('')
   const [email, setEmail] = React.useState('')
-  const [toolTipStatus, setToolTipStatus] = React.useState(registrationStatuses[0])
   const history = useHistory()
   
 
@@ -64,7 +63,7 @@ function App() {
       .then(res => {
         setIsLoggedIn(true)
         if (!localStorage.getItem('_id')) {
-          handleToken()
+          handleToken(res.token)
         }
       })
       .then(res => history.push('/'))
@@ -81,17 +80,20 @@ function App() {
         // newUser._id = res._id
 
         // set email then redirect to login page with email filled out.
+        localStorage.setItem('_id', res._id)
         setEmail(res.email)
         setIsLoggedIn(true)
         history.push('/')
       })
       .then(res => {
         // load success message to info tool tip modal and open
-        setInfoStatus(registrationStatuses[0])
+        if (res) {
+          setToolTipStatus(registrationStatuses[0])
+        }
       })
       .catch(err => {
+        setToolTipStatus(registrationStatuses[1])
         console.error(`An error occurred during signup: ${err}`)
-        setInfoStatus(registrationStatuses[1])
       })
       .finally(setIsInfoToolTipOpen(true))
   }
@@ -204,7 +206,7 @@ function App() {
     setIsPreviewOpen(false)
     setIsInfoToolTipOpen(false)
     setSelectedCard({})
-    setInfoStatus({})
+    setToolTipStatus({})
   }
 
   // HTML for landing page

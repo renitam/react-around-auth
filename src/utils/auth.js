@@ -1,6 +1,5 @@
 // Register user and return email and owner ID
 const baseUrl= 'https://register.nomoreparties.co' 
-const groupID= 'group-11'
 
 function checkServerCode(res) {
   if (res.ok) {
@@ -19,11 +18,6 @@ export const register = (email, password) => {
     body: JSON.stringify({ email, password })
   })
   .then(res => checkServerCode(res))
-  .then(res => {
-    localStorage.setItem('email', res.email)
-    localStorage.setItem('_id', res._id)
-    return res
-  })
 }
 
 // Log in with email password, return auth token
