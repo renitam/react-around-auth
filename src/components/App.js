@@ -1,6 +1,6 @@
 import React from 'react'
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
-import { Route, Switch, useHistory } from 'react-router-dom'
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
@@ -36,37 +36,47 @@ function App() {
 
   // Load in profile info -- currentUser state used for CurrentUserContext
   React.useEffect(() => {
-    api.getProfileInfo()
-      .then((info) => {
-        setCurrentUser(info)
-      })
-      .catch(err => console.error(`Unable to load profile info: ${err}`))
-  }, [])
+    if (isLoggedIn && window.location.pathname === '/') {
+      api.getProfileInfo()
+        .then((info) => {
+          setCurrentUser(info)
+        })
+        .catch(err => console.error(`Unable to load profile info: ${err}`))
+    }
+  }, [isLoggedIn])
 
   // Load in initial cards
   React.useEffect(() => {
-    api.getCards()
-    .then( (initialCards) => {
-      setCardList([...initialCards])
-    })
-    .catch(err => console.error(`Unable to load cards: ${err}`))
+    if (isLoggedIn && window.location.pathname === '/') {
+      api.getCards()
+        .then( (initialCards) => {
+          setCardList([...initialCards])
+        })
+        .catch(err => console.error(`Unable to load cards: ${err}`))
+    }
+  }, [isLoggedIn])
+
+  // Check token upon loading page any page
+  React.useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      handleToken(token)
+    }
   }, [])
 
-  // Check token upon loading page
-  React.useEffect(() => {
-    handleToken()
-  }, [])
+  function loadApp() {
+    setIsLoggedIn(true)
+    history.push('/')
+  }
 
   // Handle login submit 
   function onLogin(email, password) {
     auth.login(email, password)
       .then(res => {
-        setIsLoggedIn(true)
-        if (!localStorage.getItem('_id')) {
-          handleToken(res.token)
-        }
+        const token = res.token
+        localStorage.setItem('token', token)
+        handleToken(token)
       })
-      .then(res => history.push('/'))
       .catch(err => console.error(`An error occurred during login: ${err}`))
   }
 
@@ -80,14 +90,13 @@ function App() {
         // newUser._id = res._id
 
         // set email then redirect to login page with email filled out.
-        localStorage.setItem('_id', res._id)
+        console.log(res)
         setEmail(res.email)
-        setIsLoggedIn(true)
-        history.push('/')
+        loadApp()
       })
       .then(res => {
         // load success message to info tool tip modal and open
-        if (res) {
+        if (res.email) {
           setToolTipStatus(registrationStatuses[0])
         }
       })
@@ -95,7 +104,7 @@ function App() {
         setToolTipStatus(registrationStatuses[1])
         console.error(`An error occurred during signup: ${err}`)
       })
-      .finally(setIsInfoToolTipOpen(true))
+      .finally(() => setIsInfoToolTipOpen(true))
   }
 
   // Handle logout submit
@@ -106,18 +115,24 @@ function App() {
     history.push('/signin')
   }
 
-  function handleToken(token = localStorage.getItem('token')) {
+  function handleToken(token) {
     auth.checkToken(token)
       .then(res => {
-        setEmail(res.data.email)
-        setIsLoggedIn(true)
-        // For Project 15, save _id to currentUser context
-        // const data = currentUser
-        // data._id = res._id
-        // setCurrentUser(data)
-        history.push('/')
+        if (res.data.email) {
+          setEmail(res.data.email)
+          loadApp()
+          return
+          // For Project 15, save _id to currentUser context
+          // const userData = currentUser
+          // userData._id = res.data_id
+          // setCurrentUser(userData)
+        }
+        return Promise.reject(`Token expired. Please sign in again.`)
       })
-      .catch(err => `An error occurred during authentication: ${err}`)
+      .catch(err => {
+        console.error(`An error occurred during authentication: ${err}`)
+        onSignOut()
+      })
   }
 
   // Open edit avatar modal

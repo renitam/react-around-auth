@@ -4,7 +4,13 @@ const Register = (props) => {
   const { onRegister, email } = props
 
   return(
-    <AuthForm title='Sign up' onSubmit={onRegister} initialEmail={email} />
+    <AuthForm 
+      title='Sign up' 
+      onSubmit={onRegister} 
+      initialEmail={email}
+      footer='Already a member? Log in here!'
+      footerPath='/signin'
+    />
   )
 }
 

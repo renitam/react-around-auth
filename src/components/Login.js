@@ -4,7 +4,13 @@ import AuthForm from './AuthForm'
 function Login({ onLogin, email }) {
 
   return(
-    <AuthForm title='Log in' onSubmit={onLogin} initialEmail={email} />
+    <AuthForm 
+      title='Log in' 
+      onSubmit={onLogin} 
+      initialEmail={email} 
+      footer='Not a member yet? Sign up here!'
+      footerPath='/signup'
+    />
   )
 }
 

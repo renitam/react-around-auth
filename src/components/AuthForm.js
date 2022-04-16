@@ -1,8 +1,16 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import * as auth from '../utils/auth'
 
 const Flow = (props) => {
-  const { title, onSubmit, initialEmail } = props
+  const { 
+    title, 
+    onSubmit, 
+    initialEmail, 
+    footer, 
+    footerPath 
+  } = props
+  
   const [email, setEmail] = React.useState(initialEmail)
   const [password, setPassword] = React.useState('')
   const [hide, setHide] = React.useState(true)
@@ -62,6 +70,7 @@ const Flow = (props) => {
         <i className={`${icon} auth__eye link`} onClick={handleEye} />
         <span className='auth__input-error auth__input-error_pass'></span>
         <button type='submit' className='auth__save'>{title}</button>
+        <Link className='auth__footer' to={footerPath}>{footer}</Link>
       </form>
     </main>
   )

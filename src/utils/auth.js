@@ -30,10 +30,6 @@ export const login = (email, password) => {
     body: JSON.stringify({ email, password })
   })
   .then(res => checkServerCode(res))
-  .then((res) => {
-    localStorage.setItem('token', res.token)
-    return res
-  })
 }
 
 // Check login token upon visiting page and return id & email for loading page
