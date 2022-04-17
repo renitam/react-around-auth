@@ -1,6 +1,6 @@
 import React from 'react'
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
-import { Route, Switch, useHistory, useLocation } from 'react-router-dom'
+import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
@@ -243,6 +243,9 @@ function App() {
           </Route>
           <Route path='/signin'>
             <Login onLogin={onLogin} email={email} />
+          </Route>
+          <Route path='*'>
+            <Redirect to='/' />
           </Route>
         </Switch>
         <Footer />
