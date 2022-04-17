@@ -17,7 +17,7 @@ export const register = (email, password) => {
     },
     body: JSON.stringify({ email, password })
   })
-  .then(res => checkServerCode(res))
+    .then(res => checkServerCode(res))
 }
 
 // Log in with email password, return auth token
@@ -29,7 +29,7 @@ export const login = (email, password) => {
     },
     body: JSON.stringify({ email, password })
   })
-  .then(res => checkServerCode(res))
+    .then(res => checkServerCode(res))
 }
 
 // Check login token upon visiting page and return id & email for loading page
@@ -41,5 +41,5 @@ export const checkToken = (token) => {
       'Authorization': `Bearer ${token}`
     }
   })
-  .then(res => checkServerCode(res))
+    .then(res => checkServerCode(res))
 }

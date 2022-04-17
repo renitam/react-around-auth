@@ -1,6 +1,5 @@
 import React from 'react'
 import Popup from './Popup'
-import { registrationStatuses } from '../utils/constants'
 
 const InfoTooltip = (props) => {
   const { isOpen, status, onClose } = props

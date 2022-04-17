@@ -24,13 +24,14 @@ function App() {
   const [isConfirmTrashOpen, setIsConfirmTrashOpen] = React.useState(false)
   const [isPreviewOpen, setIsPreviewOpen] = React.useState(false)
   const [isInfoToolTipOpen, setIsInfoToolTipOpen] = React.useState(false)
-
   const [toolTipStatus, setToolTipStatus] = React.useState(registrationStatuses[0])
   const [selectedCard, setSelectedCard] = React.useState({})
+
   const [currentUser, setCurrentUser] = React.useState({})
   const [cardList, setCardList] = React.useState([])
   const [isLoggedIn, setIsLoggedIn] = React.useState('')
   const [email, setEmail] = React.useState('')
+  
   const history = useHistory()
   
 
@@ -88,17 +89,13 @@ function App() {
         // Note to self: may need a default avatar and name for project 15 on backend, or more signup fields.
         // const newUser = currentUser
         // newUser._id = res._id
+        console.log(res, res.email, res._id, res.data.email, res.data._id)
 
-        // set email then redirect to login page with email filled out.
-        console.log(res)
-        setEmail(res.email)
-        loadApp()
-      })
-      .then(res => {
-        // load success message to info tool tip modal and open
-        if (res.email) {
-          setToolTipStatus(registrationStatuses[0])
-        }
+        // set email then redirect to login page with email filled out
+        setEmail(res.data.email)
+        setToolTipStatus(registrationStatuses[0])
+        setIsInfoToolTipOpen(true)
+        history.push('/')
       })
       .catch(err => {
         setToolTipStatus(registrationStatuses[1])
@@ -250,13 +247,37 @@ function App() {
           </Route>
         </Switch>
         <Footer />
-        <EditAvatarPopup isOpen={isEditAvatarOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
-        <EditProfilePopup isOpen={isEditProfileOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
-        <AddPlacePopup isOpen={isAddPlaceOpen} onClose={closeAllPopups} onUpdateCards={handleAddPlaceSubmit}/>
-        <TrashPopup isOpen={isConfirmTrashOpen} onClose={closeAllPopups} onUpdateTrash={handleCardDelete} />
+        <EditAvatarPopup 
+          isOpen={isEditAvatarOpen} 
+          onClose={closeAllPopups} 
+          onUpdateAvatar={handleUpdateAvatar} 
+          />
+        <EditProfilePopup 
+          isOpen={isEditProfileOpen} 
+          onClose={closeAllPopups} 
+          onUpdateUser={handleUpdateUser}
+          />
+        <AddPlacePopup 
+          isOpen={isAddPlaceOpen} 
+          onClose={closeAllPopups} 
+          onUpdateCards={handleAddPlaceSubmit}
+          />
+        <TrashPopup 
+          isOpen={isConfirmTrashOpen} 
+          onClose={closeAllPopups} 
+          onUpdateTrash={handleCardDelete} 
+          />
       </CurrentUserContext.Provider>
-      <InfoTooltip isOpen={isInfoToolTipOpen} onClose={closeAllPopups} status={toolTipStatus} />
-      <ImagePopup isOpen={isPreviewOpen} onClose={closeAllPopups} card={selectedCard} />
+      <InfoTooltip 
+        isOpen={isInfoToolTipOpen} 
+        onClose={closeAllPopups} 
+        status={toolTipStatus} 
+        />
+      <ImagePopup 
+        isOpen={isPreviewOpen} 
+        onClose={closeAllPopups} 
+        card={selectedCard} 
+        />
     </>
   )
 }

@@ -3,7 +3,7 @@ import logo from '../images/logo.svg'
 import { Route, Link } from 'react-router-dom'
 
 function Header(props) {
-  const { onSignOut, email, isLoggedIn } = props
+  const { onSignOut, email } = props
   const [showHeader, setShowHeader] = React.useState(false)
 
 
