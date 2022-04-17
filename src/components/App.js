@@ -89,7 +89,6 @@ function App() {
         // Note to self: may need a default avatar and name for project 15 on backend, or more signup fields.
         // const newUser = currentUser
         // newUser._id = res._id
-        console.log(res, res.email, res._id, res.data.email, res.data._id)
 
         // set email then redirect to login page with email filled out
         setEmail(res.data.email)
